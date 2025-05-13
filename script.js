@@ -17,6 +17,7 @@ document.getElementById("studentForm").addEventListener("submit",function(e){
  students.push(student)
  //console.log(students)
 addStudentToTable(student);
+actualizarPromedio();
  this.reset()
 
 });
@@ -30,4 +31,13 @@ function addStudentToTable(student){
     <td>${student.grade}</td>
     `;
  tableBody.appendChild(row);
+}
+const promedioDiv = document.getElementById("average")
+function actualizarPromedio() {
+   let suma = 0;
+   for (const student of students) {
+      suma += student.grade;
+   }
+   const promedio = (suma / students.length).toFixed(2);
+   promedioDiv.textContent = `Promedio General del curso: ${promedio}`;
 }
