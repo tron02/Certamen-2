@@ -5,7 +5,8 @@ document.getElementById("studentForm").addEventListener("submit",function(e){
 
  const name=document.getElementById("name").value.trim();
  const lastName=document.getElementById("lastName").value.trim();
- const grade=parseFloat(document.getElementById("grade").value)
+ const gradeValue = document.getElementById("grade").value.trim();
+ const grade=parseFloat(gradeValue);
  const date=document.getElementById("date").value.trim();
 
  clearErrors();
@@ -48,8 +49,8 @@ function addStudentToTable(student){
     row.innerHTML=`
     <td>${student.name}</td>
     <td>${student.lastName}</td>
-    <td>${student.date}</td>
-    <td>${student.grade}</td>
+    <td>${formatearFecha(student.date)}</td>
+    <td>${student.grade.toFixed(1)}</td>
     `;
  tableBody.appendChild(row);
 }
@@ -70,4 +71,9 @@ function showError(id, message) {
 function clearErrors() {
    const errors = document.querySelectorAll(".error");
    errors.forEach(error => error.textContent="");
+}
+
+function formatearFecha(fechaISO) {
+   const [año, mes, dia] = fechaISO.split("-");
+   return `${dia}/${mes}/${año}`;
 }
