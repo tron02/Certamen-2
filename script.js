@@ -8,10 +8,30 @@ document.getElementById("studentForm").addEventListener("submit",function(e){
  const grade=parseFloat(document.getElementById("grade").value)
  const date=document.getElementById("date").value.trim();
 
- if(grade<1 || grade>7 ||!name ||!lastName || !date || isNaN(grade)){
-    alert("Error al ingresar los datos")
-    return
+ clearErrors();
+
+ let error = false;
+ 
+ if (!name) {
+    showError("errorName", "El nombre es obligatorio.");
+    error = true;
  }
+ 
+ if (!lastName) {
+    showError("errorLastName", "El apellido es obligatorio.");
+ }
+ 
+ if (!date) {
+    showError("errorDate", "La fecha es obligatoria.");
+    error = true;
+ }
+ 
+ if (!gradeValue || isNaN(grade) || grade < 1 || grade > 7) {
+    showError("errorGrade", "La nota debe estar entre 1.0 y 7.0.");
+    error = true;
+ }
+ 
+ if (error) return;
 
  const student={name,lastName,date,grade}
  students.push(student)
@@ -21,6 +41,7 @@ actualizarPromedio();
  this.reset()
 
 });
+
 const tableBody=document.querySelector("#studentsTable tbody");
 function addStudentToTable(student){
     const row=document.createElement("tr");
@@ -40,4 +61,13 @@ function actualizarPromedio() {
    }
    const promedio = (suma / students.length).toFixed(2);
    promedioDiv.textContent = `Promedio General del curso: ${promedio}`;
+}
+
+function showError(id, message) {
+   document.getElementById(id).textContent = message;
+}
+
+function clearErrors() {
+   const errors = document.querySelectorAll(".error");
+   errors.forEach(error => error.textContent="");
 }
