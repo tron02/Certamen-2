@@ -1,4 +1,5 @@
 const students=[]
+let editIndex = null;
 
 document.getElementById("studentForm").addEventListener("submit",function(e){
  e.preventDefault();
@@ -34,26 +35,59 @@ document.getElementById("studentForm").addEventListener("submit",function(e){
  
  if (error) return;
 
- const student={name,lastName,date,grade}
- students.push(student)
- //console.log(students)
-addStudentToTable(student);
-actualizarPromedio();
- this.reset()
+ const student = { name, lastName, date, grade };
 
+    if (editIndex !== null) {
+        students[editIndex] = student;
+        renderTable();
+        editIndex = null;
+    } else {
+        students.push(student);
+        addStudentToTable(student, students.length - 1);
+    }
+
+    actualizarPromedio();
+    document.getElementById("studentForm").reset();
 });
 
 const tableBody=document.querySelector("#studentsTable tbody");
-function addStudentToTable(student){
+function addStudentToTable(student, index){
     const row=document.createElement("tr");
     row.innerHTML=`
     <td>${student.name}</td>
     <td>${student.lastName}</td>
     <td>${formatearFecha(student.date)}</td>
     <td>${student.grade.toFixed(1)}</td>
+    <td>
+            <button onclick="editarEstudiante(${index})">Editar</button>
+            <button onclick="eliminarEstudiante(${index})">Eliminar</button>
+        </td>
     `;
  tableBody.appendChild(row);
 }
+
+function renderTable() {
+    tableBody.innerHTML = "";
+    students.forEach((student, index) => {
+        addStudentToTable(student, index);
+    });
+}
+
+function editarEstudiante(index) {
+    const student = students[index];
+    document.getElementById("name").value = student.name;
+    document.getElementById("lastName").value = student.lastName;
+    document.getElementById("date").value = student.date;
+    document.getElementById("grade").value = student.grade;
+    editIndex = index;
+}
+
+function eliminarEstudiante(index) {
+    students.splice(index, 1);
+    renderTable();
+    actualizarPromedio();
+}
+
 const promedioDiv = document.getElementById("average")
 function actualizarPromedio() {
    let suma = 0;
