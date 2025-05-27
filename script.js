@@ -47,6 +47,7 @@ document.getElementById("studentForm").addEventListener("submit",function(e){
     }
 
     actualizarPromedio();
+    actualizarEstadisticas();
     document.getElementById("studentForm").reset();
 });
 
@@ -86,6 +87,7 @@ function eliminarEstudiante(index) {
     students.splice(index, 1);
     renderTable();
     actualizarPromedio();
+    actualizarEstadisticas();
 }
 
 const promedioDiv = document.getElementById("average")
@@ -96,6 +98,19 @@ function actualizarPromedio() {
    }
    const promedio = (suma / students.length).toFixed(2);
    promedioDiv.textContent = `Promedio General del curso: ${promedio}`;
+}
+
+function actualizarEstadisticas(){
+   const total = students.length;
+   const aprobados = students.filter(s => s.grade >= 4.0).length;
+   const reprobados = total - aprobados;
+
+   const porcentajeAprobados = total ? ((aprobados / total) * 100).toFixed(1) : 0;
+   const porcentajeReprobados =total ? ((reprobados / total) * 100).toFixed(1) : 0;
+
+   document.getElementById("totalEstudiantes").textContent = total;
+   document.getElementById("porcentajeAprobados").textContent = `${porcentajeAprobados}%`;
+   document.getElementById("porcentajeReprobados").textContent = `${porcentajeReprobados}%`;
 }
 
 function showError(id, message) {
